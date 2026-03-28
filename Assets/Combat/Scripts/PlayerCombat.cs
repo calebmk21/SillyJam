@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
@@ -30,7 +31,10 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("Party Info")] 
     public bool inParty = true;
-    private bool _isTheirTurn = false;
+    public bool isTheirTurn = false;
+
+    [Header("Status Info")]
+    public bool isAlive = true;
 
     public void DisplayStatInfo()
     {
@@ -48,6 +52,24 @@ public class PlayerCombat : MonoBehaviour
     {
         
     }
-    
+
+    #region Stat Modifications
+
+    public void TakeDamage(int damage)
+    {
+        CurrentHP = math.max(CurrentHP -= damage, 0);
+    }
+
+    public void Heal(int healing)
+    {
+        CurrentHP = math.min(CurrentHP += healing, MaxHP);
+    }
+
+    // generic buffing method for increasing stat
+    public void Buff()
+    {
+        
+    }
+    #endregion
 }
 

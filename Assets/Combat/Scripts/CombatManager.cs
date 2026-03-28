@@ -17,16 +17,20 @@ public class CombatManager : MonoBehaviour
     }
 
     private Phase _currentPhase = Phase.Start;
+    private PlayerCombat _currentPartyMember;
+
 
     [Header("Combat Data")]
     [SerializeField] private Queue<GameObject> TurnQueue; 
+    [SerializeField] private GameObject partyPrefab;
+    
     
     
     void Awake()
     {
         Instance = this;
         _currentPhase = Phase.Start;
-        LoadCombatants();
+        //LoadCombatants();
 
     }
 
@@ -41,10 +45,30 @@ public class CombatManager : MonoBehaviour
         
     }
 
-    #region Loading and Data
-    public void LoadCombatants()
+    #region Combat Phases
+
+    private IEnumerator InitializeCombat()
     {
+        // GameObject party = Instantiate(partyPrefab);
+        // PlayerCombat MainChar = party.transform.Find("MainChar").GetComponent<PlayerCombat>();
         
+
+
+        yield return null;
+    }
+
+    private IEnumerator PlayerPhase;
+    private IEnumerator EnemyPhase;
+    #endregion
+
+
+    #region Loading and Data
+    public void LoadCombatants(GameObject enemies)
+    {
+        GameObject party = Instantiate(partyPrefab);
+
+
+
     }
 
     public void LoadPlayerData()
@@ -62,13 +86,19 @@ public class CombatManager : MonoBehaviour
         
     }
     #endregion
-
-
-
     #region UI Controls
     #endregion
-
     #region Battle Transitions
+
+    public void NextPhase()
+    {
+        
+    }
+
+    public void EndBattle()
+    {
+        
+    }
 
     
 
