@@ -7,20 +7,15 @@ public class CharacterStats : ScriptableObject
     public string Name;
     public int Level;
     public GameObject character;
-    public bool isEnemy = true;
 
-    // current values
+    // base values, before modification
     public int HP;
     public int MP;
     public int ATK;
     public int MAG;
     public int DEF;
-    public int SPD;
     public int MDEF;
+    public int SPD;
 
-
-
-
-
-
+    
 }

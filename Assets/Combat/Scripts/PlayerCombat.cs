@@ -5,16 +5,17 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("Data Container")]
     [SerializeField] CharacterStats BaseStats;
+    [SerializeField] StatGrowths Growths;
     
-    [Header("Combat Info")] 
-    // private int MaxHP;
-    // private int MaxMP;
-    //
-    // private int ATK;
-    // private int MAG;
-    // private int DEF;
-    // private int MDEF;
-    // private int SPD;
+    [Header("Stat Info")] 
+    private int MaxHP;
+    private int MaxMP;
+    
+    private int ATK;
+    private int MAG;
+    private int DEF;
+    private int MDEF;
+    private int SPD;
 
     private int EXP;
     
@@ -29,6 +30,7 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("Party Info")] 
     public bool inParty = true;
+    private bool _isTheirTurn = false;
 
     public void DisplayStatInfo()
     {

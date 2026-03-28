@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "CombatActions",
+    "maps": [
+        {
+            "name": "Combat",
+            "id": "84cec807-fe2a-4215-8158-966c2d73a8c8",
+            "actions": [
+                {
+                    "name": "Debug",
+                    "type": "Button",
+                    "id": "ff822d74-462c-46af-9069-6b92022b8217",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "94a68e4a-b22c-4f11-8bd6-516129b88e15",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
