@@ -15,11 +15,11 @@ MonoBehaviour:
   Name: JohnWizard
   Level: 3
   character: {fileID: 0}
-  isEnemy: 1
   HP: 199
   MP: 999
   ATK: 420
   MAG: 100
   DEF: 12
-  SPD: 1
   MDEF: 500
+  SPD: 2
+  isPartyMember: 1

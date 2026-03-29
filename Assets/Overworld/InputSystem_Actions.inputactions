@@ -991,34 +991,6 @@
                     "isPartOfComposite": false
                 }
             ]
-        },
-        {
-            "name": "Combat",
-            "id": "75c3a15a-deab-4648-a842-303796db3f69",
-            "actions": [
-                {
-                    "name": "PrintDebug",
-                    "type": "Button",
-                    "id": "e9eb1db0-1846-404f-9bd2-9e1fa4befc2f",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "19b4de60-0633-44ee-90c7-490011bec771",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PrintDebug",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
         }
     ],
     "controlSchemes": [
