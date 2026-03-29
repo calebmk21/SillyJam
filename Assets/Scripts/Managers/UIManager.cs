@@ -5,7 +5,8 @@ using UnityEngine.UI;
 public enum PanelID
 {
     PauseMenu,
-    SettingsMenu
+    SettingsMenu,
+    Credits
 }
 
 public class UIManager : MonoBehaviour
@@ -19,6 +20,7 @@ public class UIManager : MonoBehaviour
     // Panels
     [SerializeField] private GameObject _pauseMenu;
     [SerializeField] private GameObject _settingsMenu;
+    [SerializeField] private GameObject _credits;
     private Dictionary<PanelID, GameObject> _panels;
 
     // Sliders
@@ -40,6 +42,10 @@ public class UIManager : MonoBehaviour
         if (_settingsMenu != null)
         {
             _panels.Add(PanelID.SettingsMenu, _settingsMenu);
+        }
+        if (_credits != null)
+        {
+            _panels.Add(PanelID.Credits, _credits);
         }
     }
 
@@ -84,6 +90,12 @@ public class UIManager : MonoBehaviour
     {
         PlayButtonSound();
         GameManager.Instance.StartGame();
+    }
+
+    public void OnCreditsPressed()
+    {
+        PlayButtonSound();
+        ShowPanel(PanelID.Credits);
     }
 
     public void OnQuitPressed()

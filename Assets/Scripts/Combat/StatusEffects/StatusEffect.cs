@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public abstract class StatusEffect 
 {
@@ -37,7 +39,6 @@ public abstract class StatusEffect
         {
             _currentTurnDuration += Data.turnDuration;
         }
-        
         
     }
 
