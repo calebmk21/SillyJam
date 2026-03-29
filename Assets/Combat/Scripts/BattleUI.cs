@@ -7,7 +7,7 @@ public class BattleUI : MonoBehaviour
     [SerializeField] private CombatUnit character;
     [SerializeField] private Button action1, action2, action3, action4;
     private TMPro.TextMeshProUGUI text1, text2, text3, text4;
-    private BattleActions battleActions;
+    private BattleActions[] battleActions = new BattleActions[4];
     
     public void LoadCharacterActions(CombatUnit newPlayer)
     {

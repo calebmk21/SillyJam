@@ -1,4 +1,5 @@
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CombatUnit : MonoBehaviour
@@ -6,9 +7,8 @@ public class CombatUnit : MonoBehaviour
 
     [Header("Data Container")]
     [SerializeField] CharacterStats BaseStats;
-    [SerializeField] BattleActions Actions;
-    // [SerializeField] StatGrowths Growths;
-    
+    [SerializeField] BattleActions Action1, Action2, Action3, Action4;
+    BattleActions[] _actions = new BattleActions[4];
     
     [Header("Stat Info")] 
     private int MaxHP;
@@ -46,6 +46,12 @@ public class CombatUnit : MonoBehaviour
         MDEF = BaseStats.MDEF;
         SPD = BaseStats.SPD;
         isPartyMember = BaseStats.isPartyMember;
+        
+        _actions[0] = Action1;
+        _actions[1] = Action2;
+        _actions[2] = Action3;
+        _actions[3] = Action4;
+        
     }
 
     #region Combat Actions
@@ -89,9 +95,9 @@ public class CombatUnit : MonoBehaviour
         return BaseStats.Name;
     }
 
-    public BattleActions GetBattleActions()
+    public BattleActions[] GetBattleActions()
     {
-        return Actions;
+        return _actions;
     }
     #endregion
     
@@ -127,7 +133,6 @@ public class CombatUnit : MonoBehaviour
         return damage;
     }
     
-    
     #endregion
     
     #region Debug
@@ -140,6 +145,17 @@ public class CombatUnit : MonoBehaviour
         Debug.Log(BaseStats.MDEF);
         Debug.Log(BaseStats.SPD);
     }
+    #endregion
+    
+    #region Special Attack Methods
+
+    public int DaggerDance(int atk, int spd, int def, int pow)
+    {
+        int damage = pow * spd + atk - def;
+        return damage;
+    }
+    
+    
     #endregion
     
 }

@@ -6,7 +6,7 @@ using System.Linq;
 
 public class CombatManager : MonoBehaviour
 {
-    public static CombatManager Instance;
+    public static CombatManager Instance {get ; private set;}
 
     public enum BattlePhase
     {
@@ -34,8 +34,14 @@ public class CombatManager : MonoBehaviour
     
     void Awake()
     {
-        Instance = this;
-        _currentPhase = BattlePhase.Start;
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void Start()
@@ -95,6 +101,11 @@ public class CombatManager : MonoBehaviour
     void PlayerTurn()
     {
         combatUI.LoadCharacterActions(_currentUnit);
+    }
+
+    void OnActionSelected(CombatUnit target, BattleActions action)
+    {
+        
     }
 
     // Enemy turn logic
