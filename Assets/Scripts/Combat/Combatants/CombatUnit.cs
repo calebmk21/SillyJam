@@ -1,12 +1,17 @@
+using JetBrains.Annotations;
+using NUnit.Framework.Interfaces;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class CombatUnit : MonoBehaviour
 {
 
     [Header("Data Container")]
     [SerializeField] CharacterStats BaseStats;
+
+    // TODO change later to fit new system
     [SerializeField] BattleActions Action1, Action2, Action3, Action4;
     BattleActions[] _actions = new BattleActions[4];
     
@@ -35,7 +40,7 @@ public class CombatUnit : MonoBehaviour
     
     [Header("Status Info")]
     public bool isAlive = true;
-
+    protected Dictionary<StatusEffectData, StatusEffect> statusEffects;
 
 
     void Start()
@@ -85,22 +90,44 @@ public class CombatUnit : MonoBehaviour
         return isPartyMember;
     }
 
-    public int GetSpeed()
-    {
-        return SPD;
-    }
+
 
     public string GetName()
     {
         return BaseStats.Name;
     }
 
+    // Stats
+    public int GetAttack()
+    {
+        return ATK;
+    }
+
+    public int GetDefense()
+    {
+        return DEF;
+    }
+
+    public int GetMagic()
+    {
+        return MAG;
+    }
+
+    public int GetMagicDefense()
+    {
+        return MDEF;
+    }
+        public int GetSpeed()
+    {
+        return SPD;
+    }
+
+
     public BattleActions[] GetBattleActions()
     {
         return _actions;
     }
     #endregion
-    
     #region Stat Modifications
 
     public void TakeDamage(int damage)
@@ -113,11 +140,26 @@ public class CombatUnit : MonoBehaviour
         CurrentHP = math.min(CurrentHP += healing, MaxHP);
     }
 
-    // generic buffing method for increasing stat
-    public void Buff()
+    public void AddStatusEffect(StatusEffect statusEffect)
+    {
+        Debug.Log("Status effect added: " + statusEffect.Data.name + " on " + this.name);
+        if (statusEffects.ContainsKey(statusEffect.Data))
+        {
+            statusEffects[statusEffect.Data].Start(this);
+        }
+        else
+        {
+            statusEffects.Add(statusEffect.Data, statusEffect);
+            statusEffects[statusEffect.Data].Start(this);
+        }
+    }
+
+    public void ModifyStats()
     {
         
     }
+
+
     #endregion
     
     #region Battle Boilerplate
@@ -127,11 +169,12 @@ public class CombatUnit : MonoBehaviour
         this.transform.position += new  Vector3(4f, 0, 0);
     }
 
-    public int DamageCalculator(int offense, int power, int defense)
-    {
-        int damage = offense * power - 2 * defense;
-        return damage;
-    }
+    // public int DamageCalculator(Func<CombatUnit, CombatUnit, Null, Null, Null, int> lambda, CombatUnit target)
+    // {
+    //     // not sure why it requires 5 args but whatever
+    //     int damage = lambda(this, target, null, null, null);
+    //     return damage;
+    // }
     
     #endregion
     
@@ -147,16 +190,6 @@ public class CombatUnit : MonoBehaviour
     }
     #endregion
     
-    #region Special Attack Methods
-
-    public int DaggerDance(int atk, int spd, int def, int pow)
-    {
-        int damage = pow * spd + atk - def;
-        return damage;
-    }
-    
-    
-    #endregion
     
 }
 
