@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f7b20cbb033cfd45b390c4cd0bb7f2e, type: 3}
-  m_Name: JohnWizard
+  m_Name: MC
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
-  Name: JohnWizard
+  Name: Main
   Level: 3
   character: {fileID: 0}
   HP: 199
@@ -21,5 +21,5 @@ MonoBehaviour:
   MAG: 100
   DEF: 12
   MDEF: 500
-  SPD: 2
+  SPD: 400
   isPartyMember: 1

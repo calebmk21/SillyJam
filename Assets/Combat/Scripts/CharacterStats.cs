@@ -17,5 +17,7 @@ public class CharacterStats : ScriptableObject
     public int MDEF;
     public int SPD;
 
-    
+    public bool isPartyMember;
+
+
 }

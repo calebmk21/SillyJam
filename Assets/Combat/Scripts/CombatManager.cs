@@ -2,106 +2,190 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class CombatManager : MonoBehaviour
 {
     public static CombatManager Instance;
 
-    public enum Phase
+    public enum BattlePhase
     {
         Start,
         Player,
-        Transition,
         Enemy,
-        End
+        Won,
+        Lost
     }
 
-    private Phase _currentPhase = Phase.Start;
-    private PlayerCombat _currentPartyMember;
-
-
+    [Header("Combatants")]
+    // collection of all units in the battle
+    [SerializeField] private GameObject PartyContainer;
+    [SerializeField] private GameObject EnemyContainer;
+    private List<CombatUnit> Party = new List<CombatUnit>();
+    private List<CombatUnit> Enemies = new List<CombatUnit>();
+    
+    
     [Header("Combat Data")]
-    [SerializeField] private Queue<GameObject> TurnQueue; 
-    [SerializeField] private GameObject partyPrefab;
-    
-    
+    private Queue<CombatUnit> TurnOrder = new Queue<CombatUnit>();
+    private BattlePhase _currentPhase;
+    private CombatUnit _currentUnit;
+    private bool PartyAlive =  true, EnemiesAlive = true;
+    private BattleUI combatUI;
     
     void Awake()
     {
         Instance = this;
-        _currentPhase = Phase.Start;
-        //LoadCombatants();
-
+        _currentPhase = BattlePhase.Start;
     }
 
     public void Start()
     {
-        
+        LoadCombatants();
+        GetTurnOrder();
+        StartCoroutine(Combat());
     }
 
-    // Update is called once per frame
-    void Update()
+
+    #region Combat
+
+    // Main Combat Coroutine -- call after every turn
+    // TODO add a StartCoroutine(Combat()); once a combat button is selected in PlayerPhase
+    private IEnumerator Combat()
+    {
+        if (EnemiesAlive && PartyAlive)
+        {
+            if (TurnOrder.Count == 0)
+            {
+                GetTurnOrder();
+            }
+            _currentUnit = TurnOrder.Dequeue();
+            
+            Debug.Log(_currentUnit.GetName());
+            
+            if (_currentUnit.IsPartyMember())
+            {
+                _currentPhase = BattlePhase.Player;
+                yield return StartCoroutine(PlayerPhase(_currentUnit));
+            }
+            else
+            {
+                _currentPhase = BattlePhase.Enemy;
+                yield return StartCoroutine(EnemyPhase(_currentUnit));
+            }
+            
+        }
+
+        if (_currentPhase == BattlePhase.Won || _currentPhase == BattlePhase.Lost)
+        {
+            yield return StartCoroutine(BattleEnd(_currentPhase));
+        }
+    }
+    
+    // Player turn logic
+    private IEnumerator PlayerPhase(CombatUnit current)
+    {
+        // Give time for the wonky teleport
+        yield return new WaitForSeconds(1);
+        current.CharacterNudge();
+        
+        // display battle ui and give control to player
+        PlayerTurn();
+    }
+
+    void PlayerTurn()
+    {
+        combatUI.LoadCharacterActions(_currentUnit);
+    }
+
+    // Enemy turn logic
+    private IEnumerator EnemyPhase(CombatUnit current)
+    {
+        // Maybe highlight the enemy?
+        yield return new WaitForSeconds(1);
+        
+        EnemyTurn();
+    }
+
+    private void EnemyTurn()
     {
         
     }
-
-    #region Combat Phases
-
-    private IEnumerator InitializeCombat()
-    {
-        // GameObject party = Instantiate(partyPrefab);
-        // PlayerCombat MainChar = party.transform.Find("MainChar").GetComponent<PlayerCombat>();
-        
-
-
-        yield return null;
-    }
-
-    private IEnumerator PlayerPhase;
-    private IEnumerator EnemyPhase;
+    
+    
+    
     #endregion
 
 
     #region Loading and Data
-    public void LoadCombatants(GameObject enemies)
+    public void LoadCombatants()
     {
-        GameObject party = Instantiate(partyPrefab);
-
-
-
-    }
-
-    public void LoadPlayerData()
-    {
+       
+        // gathering all combat data
+        foreach (Transform child in EnemyContainer.transform)
+        {
+            Enemies.Add(child.gameObject.GetComponent<CombatUnit>());
+        }
         
+        foreach (Transform child in PartyContainer.transform)
+        {
+            Party.Add(child.gameObject.GetComponent<CombatUnit>());
+        }
+   
     }
-
-    public void LoadEnemyData()
-    {
-        
-    }
-
+    
     public void GetTurnOrder()
     {
+        Dictionary<CombatUnit, int> unitSpeeds = new Dictionary<CombatUnit, int>();
+        foreach (CombatUnit unit in Enemies)
+        {
+            unitSpeeds.Add(unit, unit.GetSpeed());
+        }
+        foreach (CombatUnit unit in Party)
+        {
+            unitSpeeds.Add(unit, unit.GetSpeed());
+        }
         
+        List<int> speedValues = new List<int>();
+        
+        foreach (KeyValuePair<CombatUnit, int> kvp in unitSpeeds)
+        {
+            speedValues.Add(kvp.Value);
+        }
+        
+        speedValues.Sort();
+        speedValues.Reverse();
+        
+        foreach (int speed in speedValues)
+        {
+            CombatUnit _curr; 
+            
+            _curr = unitSpeeds.FirstOrDefault(x => x.Value == speed).Key;
+            TurnOrder.Enqueue(_curr);
+            //Debug.Log("Adding " + _curr.GetName() + " to turn order with " + speed);
+            unitSpeeds.Remove(_curr);
+        }
+
     }
     #endregion
     #region UI Controls
     #endregion
     #region Battle Transitions
 
-    public void NextPhase()
+    private IEnumerator BattleEnd(BattlePhase phase)
     {
-        
+        yield return new WaitForSeconds(1);
     }
-
-    public void EndBattle()
-    {
-        
-    }
-
-    
 
     #endregion
+
+    // prepare to hand control back over to the game manager
+    public void ResetCombatManager()
+    {
+        EnemyContainer = null;
+        Enemies.Clear();
+        TurnOrder.Clear();
+        _currentUnit = null;
+    }
+    
     
 }
