@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioRegistry
   audioClips:
   - id: 0
-    clip: {fileID: 8300000, guid: 958519ff27e990b46aa8930a07ec44b2, type: 3}
+    clip: {fileID: 8300000, guid: f4a5041fff1f76d49994fae1f5205760, type: 3}
   - id: 1
-    clip: {fileID: 8300000, guid: 9ed66fa819f498a48af1c8b57ec9f6d9, type: 3}
+    clip: {fileID: 8300000, guid: 06836bfdfa2145742abea214376c09de, type: 3}
   - id: 2
-    clip: {fileID: 8300000, guid: 1570744323ecece4f877b5e5805ec08c, type: 3}
+    clip: {fileID: 8300000, guid: be925f29fd6c0e24a96f7741c95db261, type: 3}
   - id: 3
-    clip: {fileID: 8300000, guid: b3ba030cb552f9e4cb754a9916016b08, type: 3}
+    clip: {fileID: 8300000, guid: f4a5041fff1f76d49994fae1f5205760, type: 3}
   - id: 4
-    clip: {fileID: 8300000, guid: a8510466395664b41ab3a8226773550f, type: 3}
+    clip: {fileID: 8300000, guid: f4a5041fff1f76d49994fae1f5205760, type: 3}
   - id: 5
-    clip: {fileID: 8300000, guid: 86421ae1b989ee041ba446cadc8b36ff, type: 3}
+    clip: {fileID: 8300000, guid: f4a5041fff1f76d49994fae1f5205760, type: 3}
   - id: 6
     clip: {fileID: 8300000, guid: 25d54c11956e1224caf7ddfdaf132b72, type: 3}
