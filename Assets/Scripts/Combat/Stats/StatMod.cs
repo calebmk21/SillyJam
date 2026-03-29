@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StatMods
+public class StatMod
 {
     
 }
