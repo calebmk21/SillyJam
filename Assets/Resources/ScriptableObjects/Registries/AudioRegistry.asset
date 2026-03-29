@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 505f64b1aa5c84f49a736435c9a8753d, type: 3}
+  m_Name: AudioRegistry
+  m_EditorClassIdentifier: Assembly-CSharp::AudioRegistry
+  audioClips:
+  - id: 0
+    clip: {fileID: 8300000, guid: 958519ff27e990b46aa8930a07ec44b2, type: 3}
+  - id: 1
+    clip: {fileID: 8300000, guid: 9ed66fa819f498a48af1c8b57ec9f6d9, type: 3}
+  - id: 2
+    clip: {fileID: 8300000, guid: 1570744323ecece4f877b5e5805ec08c, type: 3}
+  - id: 3
+    clip: {fileID: 8300000, guid: b3ba030cb552f9e4cb754a9916016b08, type: 3}
+  - id: 4
+    clip: {fileID: 8300000, guid: a8510466395664b41ab3a8226773550f, type: 3}
+  - id: 5
+    clip: {fileID: 8300000, guid: 86421ae1b989ee041ba446cadc8b36ff, type: 3}
+  - id: 6
+    clip: {fileID: 8300000, guid: 25d54c11956e1224caf7ddfdaf132b72, type: 3}
