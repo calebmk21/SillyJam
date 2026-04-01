@@ -37,8 +37,9 @@
 # VS Code cache directory
 .vscode/
 
-# Project Settings
-ProjectSettings\EditorBuildSettings.asset
+# Project Settings, 
+# ProjectSettings/ProjectSettings.asset
+# ProjectSettings/EditorBuildSettings.asset
 
 # Gradle cache directory
 .gradle/

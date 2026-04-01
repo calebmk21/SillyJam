@@ -1,144 +1,171 @@
+using System;
 using JetBrains.Annotations;
 using NUnit.Framework.Interfaces;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Random = UnityEngine.Random;
 
-public class CombatUnit : MonoBehaviour
+public abstract class CombatUnit : MonoBehaviour
 {
-
-    [Header("Data Container")]
-    [SerializeField] CharacterStats BaseStats;
-
-    // TODO change later to fit new system
-    [SerializeField] BattleActions Action1, Action2, Action3, Action4;
-    BattleActions[] _actions = new BattleActions[4];
+    [Header("Data Containers")]
+    [SerializeField] protected string charName = "";
+    [SerializeField] protected int currentHealth = 100;
+    [SerializeField] protected List<AbilityData> abilitiesData;
+    protected readonly List<Ability> abilities;
+    public readonly ReadOnlyCollection<Ability> Abilities;
     
     [Header("Stat Info")] 
-    private int MaxHP;
-    private int MaxMP;
-    
-    private int ATK;
-    private int MAG;
-    private int DEF;
-    private int MDEF;
-    private int SPD;
-    
-    private bool isPartyMember;
-    
-    
-    // In-battle 
-    private int CurrentHP;
-    private int CurrentMP;
-    private BattleActions.StatusEffect Status; 
+    [SerializeField] protected CharacterStat HP;
+    [SerializeField] protected CharacterStat ATK;
+    [SerializeField] protected CharacterStat MAG;
+    [SerializeField] protected CharacterStat DEF;
+    [SerializeField] protected CharacterStat MDEF;
+    [SerializeField] protected CharacterStat SPD;
+    public readonly List<CharacterStat> Stats;
 
-    [Header("Equipment Info")] 
-    [SerializeField]  Equipment Armor;
-    [SerializeField]  Equipment Weapon;
-    [SerializeField]  Equipment Accessory;
+    public float CurrentHealth { get { return currentHealth; } }
+    public int MaxHealth { get { return HP.Value; } }
+
+    // [Header("Equipment Info")] 
+    // [SerializeField]  Equipment Armor;
+    // [SerializeField]  Equipment Weapon;
+    // [SerializeField]  Equipment Accessory;
     
     [Header("Status Info")]
-    public bool isAlive = true;
     protected Dictionary<StatusEffectData, StatusEffect> statusEffects;
+    protected bool isAlive = true;
 
-
-    void Start()
+    // Methods for turn logic
+    protected abstract void StartTurn();
+    protected abstract void EndTurn();
+    
+    
+    public CombatUnit()
     {
-        ATK = BaseStats.ATK;
-        MAG = BaseStats.MAG;
-        DEF = BaseStats.DEF;
-        MDEF = BaseStats.MDEF;
-        SPD = BaseStats.SPD;
-        isPartyMember = BaseStats.isPartyMember;
+        abilitiesData = new List<AbilityData>();
+        abilities = new List<Ability>();
+        statusEffects = new Dictionary<StatusEffectData, StatusEffect>();
+        Abilities = abilities.AsReadOnly();
         
-        _actions[0] = Action1;
-        _actions[1] = Action2;
-        _actions[2] = Action3;
-        _actions[3] = Action4;
+        // Stats
         
+        HP = new CharacterStat(StatType.MaxHealth);
+        ATK = new CharacterStat(StatType.Attack);
+        MAG = new CharacterStat(StatType.Magic);
+        DEF = new CharacterStat(StatType.Defense);
+        MDEF = new CharacterStat(StatType.MagicDefense);
+        SPD = new CharacterStat(StatType.Speed);
+
+        Stats = new List<CharacterStat>()
+        {
+            HP,
+            ATK,
+            MAG,
+            DEF,
+            MDEF,
+            SPD
+        };
+    }
+    
+    
+    protected virtual void Start()
+    {
+        currentHealth = MaxHealth;
     }
 
-    #region Combat Actions
-
-    public void DoAction(BattleActions action, CombatUnit target)
+    protected void InitializeAbilities()
     {
-        BattleActions.Category moveType =  action.Cat;
-
-        switch (moveType)
+        foreach (AbilityData data in abilitiesData)
         {
-            case BattleActions.Category.Damage:
+            Ability ab = data.Initialize(this.gameObject);
+            abilities.Add(ab);
+        }
+    }
+
+    public void UseAbility(Ability ability, CombatUnit target)
+    {
+        switch (ability.GetType().ToString())
+        {
+            case "AttackAbility":
+                AttackAbility attackAbility = ability as AttackAbility;
+                attackAbility.Trigger(this, target, out float rawDamage);
                 break;
-            case BattleActions.Category.Heal:
+            case "SupportAbility":
                 break;
-            case BattleActions.Category.Status:
+            default:
                 break;
         }
     }
-    
-    // Enemy Actions
-    public void EnemyAction()
+
+    public virtual int CalculateDamage(int mult)
     {
+        float damageVariance = Random.Range(0.90f, 1.10f);
+        float damage = mult * damageVariance * ATK.Value;
         
+        // currently no crit stat, so it's based on speed because why not
+        float critChance = Random.value;
+        float speed = (float)SPD.Value;
+        float critThreshold = speed * 0.25f / (10f + speed);
+
+        if (critThreshold > critChance)
+        {
+            damageVariance *= critThreshold;
+        }
+
+        int rounded = (int)Math.Round(damage, 0);
+        return rounded; 
     }
-    
-    #endregion
+
+    public virtual void TakeDamage(CombatUnit target, int damage)
+    {
+        currentHealth = math.max(0, currentHealth - damage);
+    }
+
+    public virtual void GetHealed(CombatUnit target, int heal)
+    {
+        currentHealth = math.min(MaxHealth, currentHealth + heal);
+    }
 
     #region Getters/Setters
-    public bool IsPartyMember()
-    {
-        return isPartyMember;
-    }
-
-
-
     public string GetName()
     {
-        return BaseStats.Name;
+        return name;
     }
 
     // Stats
     public int GetAttack()
     {
-        return ATK;
+        return ATK.Value;
     }
 
     public int GetDefense()
     {
-        return DEF;
+        return DEF.Value;
     }
 
     public int GetMagic()
     {
-        return MAG;
+        return MAG.Value;
     }
 
     public int GetMagicDefense()
     {
-        return MDEF;
+        return MDEF.Value;
     }
         public int GetSpeed()
     {
-        return SPD;
+        return SPD.Value;
     }
 
 
-    public BattleActions[] GetBattleActions()
-    {
-        return _actions;
-    }
+
     #endregion
     #region Stat Modifications
-
-    public void TakeDamage(int damage)
-    {
-        CurrentHP = math.max(CurrentHP -= damage, 0);
-    }
-
-    public void Heal(int healing)
-    {
-        CurrentHP = math.min(CurrentHP += healing, MaxHP);
-    }
+    
 
     public void AddStatusEffect(StatusEffect statusEffect)
     {
@@ -154,39 +181,61 @@ public class CombatUnit : MonoBehaviour
         }
     }
 
-    public void ModifyStats()
+    public void AddStatMod(StatMod mod)
     {
-        
+        foreach (CharacterStat stat in Stats)
+        {
+            if (stat.type == mod.StatType)
+            {
+                stat.AddModifier(mod);
+            }
+        }
     }
 
+    public void RemoveStatMod(StatMod mod)
+    {
+        foreach (CharacterStat stat in Stats)
+        {
+            if (stat.type == mod.StatType)
+            {
+                stat.RemoveModifier(mod);
+            }
+        }
+    }
+
+    public void RemoveAllStatModsFromSource(GameObject source)
+    {
+        foreach (CharacterStat stat in Stats)
+        {
+            stat.RemoveAllModifiers(source);
+        }
+    }
+    
+    protected void DecrementStatusEffects()
+    {
+        foreach (StatusEffect status in statusEffects.Values.ToList()) //creates copy into a list to iterate with. Avoids error if iterating and operating in oringal dict.
+        {
+            status.DecrementTurnDuration();
+            if (status.isFinished)
+            {
+                statusEffects.Remove(status.Data);
+            }
+        }
+    }
 
     #endregion
-    
-    #region Battle Boilerplate
 
-    public void CharacterNudge()
-    {
-        this.transform.position += new  Vector3(4f, 0, 0);
-    }
-
-    // public int DamageCalculator(Func<CombatUnit, CombatUnit, Null, Null, Null, int> lambda, CombatUnit target)
+    // public float DamageCalculator(Func<CombatUnit, CombatUnit, Null, Null, Null, int> lambda, CombatUnit target)
     // {
     //     // not sure why it requires 5 args but whatever
     //     int damage = lambda(this, target, null, null, null);
     //     return damage;
     // }
     
-    #endregion
-    
     #region Debug
     public void DisplayStatInfo()
     {
-        Debug.Log(BaseStats.HP);
-        Debug.Log(BaseStats.ATK);
-        Debug.Log(BaseStats.DEF);
-        Debug.Log(BaseStats.MAG);
-        Debug.Log(BaseStats.MDEF);
-        Debug.Log(BaseStats.SPD);
+
     }
     #endregion
     

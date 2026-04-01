@@ -6,7 +6,7 @@ using System.Linq;
 
 public class CombatManager : MonoBehaviour
 {
-    public static CombatManager Instance {get ; private set;}
+    public static CombatManager Instance { get; private set; }
 
     public enum BattlePhase
     {
@@ -19,22 +19,23 @@ public class CombatManager : MonoBehaviour
 
     [Header("Combatants")]
     // collection of all units in the battle
-    [SerializeField] private GameObject PartyContainer;
+    [SerializeField]
+    private GameObject PartyContainer;
+
     [SerializeField] private GameObject EnemyContainer;
-    private List<CombatUnit> Party = new List<CombatUnit>();
-    private List<CombatUnit> Enemies = new List<CombatUnit>();
-    
-    
-    [Header("Combat Data")]
-    private Queue<CombatUnit> TurnOrder = new Queue<CombatUnit>();
+    public List<PlayerUnit> Party = new List<PlayerUnit>();
+    public List<EnemyUnit> Enemies = new List<EnemyUnit>();
+
+
+    [Header("Combat Data")] private Queue<CombatUnit> TurnOrder = new Queue<CombatUnit>();
     private BattlePhase _currentPhase;
     private CombatUnit _currentUnit;
-    private bool PartyAlive =  true, EnemiesAlive = true;
+    private bool PartyAlive = true, EnemiesAlive = true;
     private BattleUI combatUI;
-    
+
     void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -52,6 +53,7 @@ public class CombatManager : MonoBehaviour
     }
 
 
+
     #region Combat
 
     // Main Combat Coroutine -- call after every turn
@@ -64,21 +66,22 @@ public class CombatManager : MonoBehaviour
             {
                 GetTurnOrder();
             }
+
             _currentUnit = TurnOrder.Dequeue();
-            
+
             Debug.Log(_currentUnit.GetName());
-            
-            if (_currentUnit.IsPartyMember())
-            {
-                _currentPhase = BattlePhase.Player;
-                yield return StartCoroutine(PlayerPhase(_currentUnit));
-            }
-            else
-            {
-                _currentPhase = BattlePhase.Enemy;
-                yield return StartCoroutine(EnemyPhase(_currentUnit));
-            }
-            
+
+            // if (_currentUnit())
+            // {
+            //     _currentPhase = BattlePhase.Player;
+            //     yield return StartCoroutine(PlayerPhase(_currentUnit));
+            // }
+            // else
+            // {
+            //     _currentPhase = BattlePhase.Enemy;
+            //     yield return StartCoroutine(EnemyPhase(_currentUnit));
+            // }
+
         }
 
         if (_currentPhase == BattlePhase.Won || _currentPhase == BattlePhase.Lost)
@@ -86,35 +89,30 @@ public class CombatManager : MonoBehaviour
             yield return StartCoroutine(BattleEnd(_currentPhase));
         }
     }
-    
-    // Player turn logic
-    private IEnumerator PlayerPhase(CombatUnit current)
-    {
-        // Give time for the wonky teleport
-        yield return new WaitForSeconds(1);
-        current.CharacterNudge();
-        
-        // display battle ui and give control to player
-        PlayerTurn();
-    }
 
-    void PlayerTurn()
-    {
-        combatUI.LoadCharacterActions(_currentUnit);
-    }
+    // // Player turn logic
+    // private IEnumerator PlayerPhase(CombatUnit current)
+    // {
+    //     // Give time for the wonky teleport
+    //     yield return new WaitForSeconds(1);
+    //     current.CharacterNudge();
+    //
+    //     // display battle ui and give control to player
+    //     PlayerTurn();
+    // }
+    //
+    // // Enemy turn logic
+    // private IEnumerator EnemyPhase(CombatUnit current)
+    // {
+    //     // Maybe highlight the enemy?
+    //     yield return new WaitForSeconds(1);
+    //
+    //     EnemyTurn();
+    // }
 
-    void OnActionSelected(CombatUnit target, BattleActions action)
+    private void PlayerTurn()
     {
         
-    }
-
-    // Enemy turn logic
-    private IEnumerator EnemyPhase(CombatUnit current)
-    {
-        // Maybe highlight the enemy?
-        yield return new WaitForSeconds(1);
-        
-        EnemyTurn();
     }
 
     private void EnemyTurn()
@@ -130,23 +128,22 @@ public class CombatManager : MonoBehaviour
     #region Loading and Data
     public void LoadCombatants()
     {
-       
         // gathering all combat data
         foreach (Transform child in EnemyContainer.transform)
         {
-            Enemies.Add(child.gameObject.GetComponent<CombatUnit>());
+            Enemies.Add(child.gameObject.GetComponent<EnemyUnit>());
         }
         
         foreach (Transform child in PartyContainer.transform)
         {
-            Party.Add(child.gameObject.GetComponent<CombatUnit>());
+            Party.Add(child.gameObject.GetComponent<PlayerUnit>());
         }
    
     }
     
     public void GetTurnOrder()
     {
-        Dictionary<CombatUnit, int> unitSpeeds = new Dictionary<CombatUnit, int>();
+        Dictionary<CombatUnit, float> unitSpeeds = new Dictionary<CombatUnit, float>();
         foreach (CombatUnit unit in Enemies)
         {
             unitSpeeds.Add(unit, unit.GetSpeed());
@@ -156,9 +153,9 @@ public class CombatManager : MonoBehaviour
             unitSpeeds.Add(unit, unit.GetSpeed());
         }
         
-        List<int> speedValues = new List<int>();
+        List<float> speedValues = new List<float>();
         
-        foreach (KeyValuePair<CombatUnit, int> kvp in unitSpeeds)
+        foreach (KeyValuePair<CombatUnit, float> kvp in unitSpeeds)
         {
             speedValues.Add(kvp.Value);
         }
