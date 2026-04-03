@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "StatDecrease", menuName = "StatusEffect/StatChange")]
+[CreateAssetMenu(fileName = "StatChange", menuName = "StatusEffect/StatChange")]
 public class StatChangeData : StatusEffectData
 {
     public float value;

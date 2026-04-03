@@ -482,7 +482,7 @@ GameObject:
   m_Component:
   - component: {fileID: 429977981}
   - component: {fileID: 429977980}
-  - component: {fileID: 429977982}
+  - component: {fileID: 429977983}
   m_Layer: 0
   m_Name: Protag
   m_TagString: Player
@@ -564,7 +564,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 835545507}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &429977982
+--- !u!114 &429977983
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -573,14 +573,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 429977979}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 634d288b0a5deab4daab04896418ba7c, type: 3}
+  m_Script: {fileID: 11500000, guid: 44390ddcf36e0244187d4856c99360e7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  BaseStats: {fileID: 11400000, guid: c03f1555b61304b42a801bb7d2f72e18, type: 2}
-  Armor: {fileID: 0}
-  Weapon: {fileID: 0}
-  Accessory: {fileID: 0}
-  isAlive: 1
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUnit
+  charName: Protagonist
+  currentHealth: 100
+  abilitiesData: []
+  HP:
+    baseValue: 10
+    _isModified: 0
+    _value: 0
+  ATK:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  MAG:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  DEF:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  MDEF:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  SPD:
+    baseValue: 100
+    _isModified: 0
+    _value: 0
+  _translateOffset: 2
+  _translationSpeed: 2
 --- !u!1 &593734367
 GameObject:
   m_ObjectHideFlags: 0
@@ -949,6 +973,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CombatManager
   PartyContainer: {fileID: 835545504}
   EnemyContainer: {fileID: 1848235570}
+  Party: []
+  Enemies: []
+  combatUI: {fileID: 0}
 --- !u!4 &766425097
 Transform:
   m_ObjectHideFlags: 0
@@ -994,10 +1021,10 @@ Transform:
   m_LocalScale: {x: 0.76, y: 0.76, z: 0.76}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 1892021458}
   - {fileID: 429977981}
   - {fileID: 990620135}
   - {fileID: 1448619567}
-  - {fileID: 1892021458}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &835545509
@@ -1027,7 +1054,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 990620133}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerCombat, Assembly-CSharp
         m_MethodName: DisplayStatInfo
         m_Mode: 1
@@ -1217,7 +1244,7 @@ GameObject:
   m_Component:
   - component: {fileID: 990620135}
   - component: {fileID: 990620134}
-  - component: {fileID: 990620133}
+  - component: {fileID: 990620136}
   m_Layer: 0
   m_Name: John Wizard
   m_TagString: Player
@@ -1225,23 +1252,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &990620133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 990620132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 634d288b0a5deab4daab04896418ba7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  BaseStats: {fileID: 11400000, guid: 2d8cb9eb216ad244f9807432dba96e1d, type: 2}
-  Armor: {fileID: 0}
-  Weapon: {fileID: 0}
-  Accessory: {fileID: 0}
-  isAlive: 1
 --- !u!212 &990620134
 SpriteRenderer:
   serializedVersion: 2
@@ -1316,6 +1326,47 @@ Transform:
   m_Children: []
   m_Father: {fileID: 835545507}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &990620136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990620132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44390ddcf36e0244187d4856c99360e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUnit
+  charName: John Wizard
+  currentHealth: 100
+  abilitiesData: []
+  HP:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  ATK:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  MAG:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  DEF:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  MDEF:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  SPD:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  _translateOffset: 2
+  _translationSpeed: 2
 --- !u!1 &1205985375
 GameObject:
   m_ObjectHideFlags: 0
@@ -1675,7 +1726,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1448619567}
   - component: {fileID: 1448619569}
-  - component: {fileID: 1448619568}
+  - component: {fileID: 1448619570}
   m_Layer: 0
   m_Name: Deut
   m_TagString: Player
@@ -1698,23 +1749,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 835545507}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1448619568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1448619566}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 634d288b0a5deab4daab04896418ba7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  BaseStats: {fileID: 11400000, guid: c5b3ad6a221d08843bcddfe6483beb6c, type: 2}
-  Armor: {fileID: 0}
-  Weapon: {fileID: 0}
-  Accessory: {fileID: 0}
-  isAlive: 1
 --- !u!212 &1448619569
 SpriteRenderer:
   serializedVersion: 2
@@ -1774,6 +1808,47 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1448619570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448619566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44390ddcf36e0244187d4856c99360e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUnit
+  charName: Deuteragonist
+  currentHealth: 100
+  abilitiesData: []
+  HP:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  ATK:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  MAG:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  DEF:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  MDEF:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  SPD:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  _translateOffset: 2
+  _translationSpeed: 2
 --- !u!1 &1461046855
 GameObject:
   m_ObjectHideFlags: 0
@@ -2177,7 +2252,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1892021458}
   - component: {fileID: 1892021460}
-  - component: {fileID: 1892021459}
+  - component: {fileID: 1892021461}
   m_Layer: 0
   m_Name: Quack
   m_TagString: Player
@@ -2200,23 +2275,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 835545507}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1892021459
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1892021457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 634d288b0a5deab4daab04896418ba7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  BaseStats: {fileID: 11400000, guid: 61e296dd5c9b41841b7903f92f71298d, type: 2}
-  Armor: {fileID: 0}
-  Weapon: {fileID: 0}
-  Accessory: {fileID: 0}
-  isAlive: 1
 --- !u!212 &1892021460
 SpriteRenderer:
   serializedVersion: 2
@@ -2276,6 +2334,47 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1892021461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892021457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44390ddcf36e0244187d4856c99360e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUnit
+  charName: Dr. Quack
+  currentHealth: 100
+  abilitiesData: []
+  HP:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  ATK:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  MAG:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  DEF:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  MDEF:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  SPD:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  _translateOffset: 2
+  _translationSpeed: 2
 --- !u!1 &2110385765
 GameObject:
   m_ObjectHideFlags: 0
@@ -2286,7 +2385,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2110385768}
   - component: {fileID: 2110385767}
-  - component: {fileID: 2110385766}
+  - component: {fileID: 2110385769}
   m_Layer: 0
   m_Name: it's me, mickey mouse!
   m_TagString: Enemy
@@ -2294,23 +2393,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2110385766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2110385765}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 634d288b0a5deab4daab04896418ba7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  BaseStats: {fileID: 11400000, guid: eb129a15a19569340a2f58586bb9bc21, type: 2}
-  Armor: {fileID: 0}
-  Weapon: {fileID: 0}
-  Accessory: {fileID: 0}
-  isAlive: 1
 --- !u!212 &2110385767
 SpriteRenderer:
   serializedVersion: 2
@@ -2385,6 +2467,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1848235571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2110385769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110385765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c31681522738b5a4c8307a8d40547ee8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyUnit
+  charName: Rickey Mouse
+  currentHealth: 100
+  abilitiesData: []
+  HP:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  ATK:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  MAG:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  DEF:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  MDEF:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
+  SPD:
+    baseValue: 0
+    _isModified: 0
+    _value: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

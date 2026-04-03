@@ -11,7 +11,7 @@ public class AttackAbility : Ability
         // can add TriggerEffect method to add vfx
         // data.TriggerEffect(user, target);
 
-        rawDamage = data.DamageFunc(user, target);
+        rawDamage = user.StandardDamageCalculator(1);
         if (statusEffects == null) return;
         foreach (StatusEffect status in statusEffects)
         {

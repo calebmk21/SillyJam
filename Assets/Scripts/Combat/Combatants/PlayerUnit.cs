@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using System.Collections;
 
 public class PlayerUnit : CombatUnit
 {
@@ -20,8 +22,11 @@ public class PlayerUnit : CombatUnit
     public delegate void EndTurnEventHandler();
     public event EndTurnEventHandler OnEndTurn;
     
+    // Targeting Events
     
-    private delegate void DealDamageCallback(float damage);
+    
+    
+    private delegate void DealDamageCallback(int damage);
     private DealDamageCallback _dealDamageCallback;
     
     protected virtual void Awake()
@@ -30,16 +35,36 @@ public class PlayerUnit : CombatUnit
         audioController = GetComponent<CharacterAudioController>();
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        if (CombatManager.Instance != null)
+        {
+            //CombatManager.OnActiveTurnChanged += StartTurn(unit);
+        }
+    }
+
+    protected virtual void Update()
+    {
+
+    }
+    
 
     public virtual void Attack(EnemyUnit enemy)
     {
         
     }
+
+    public virtual void UseAbility(Ability ability)
+    {
+        
+    }
+    
     
     protected override void StartTurn()
     {
-        audioController.PlayStartTurnVoice();
-        //StartCoroutine(MoveLeft());
+        //audioController.PlayStartTurnVoice();
+        StartCoroutine(MoveRight());
         OnStartTurn?.Invoke(this);
     }
 
@@ -49,5 +74,25 @@ public class PlayerUnit : CombatUnit
         //StartCoroutine(MoveRight());
         OnEndTurn?.Invoke();
     }    
+    
+    private IEnumerator MoveRight()
+    {
+        float startingXpos = transform.position.x;
+        while (transform.position.x < startingXpos + _translateOffset)
+        {
+            transform.Translate(Vector3.right * _translationSpeed * Time.deltaTime, Space.World);
+            yield return null;
+        }
+    }
+    
+    private IEnumerator MoveLeft()
+    {
+        float startingXpos = transform.position.x;
+        while (transform.position.x > startingXpos - _translateOffset)
+        {
+            transform.Translate(Vector3.right * _translationSpeed * Time.deltaTime, Space.World);
+            yield return null;
+        }
+    }
     
 }

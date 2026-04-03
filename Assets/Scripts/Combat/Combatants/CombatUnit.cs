@@ -38,6 +38,7 @@ public abstract class CombatUnit : MonoBehaviour
     [Header("Status Info")]
     protected Dictionary<StatusEffectData, StatusEffect> statusEffects;
     protected bool isAlive = true;
+    protected bool isActiveTurn = false;
 
     // Methods for turn logic
     protected abstract void StartTurn();
@@ -86,37 +87,38 @@ public abstract class CombatUnit : MonoBehaviour
         }
     }
 
-    public void UseAbility(Ability ability, CombatUnit target)
-    {
-        switch (ability.GetType().ToString())
-        {
-            case "AttackAbility":
-                AttackAbility attackAbility = ability as AttackAbility;
-                attackAbility.Trigger(this, target, out float rawDamage);
-                break;
-            case "SupportAbility":
-                break;
-            default:
-                break;
-        }
-    }
+    // public virtual void UseAbility(Ability ability, CombatUnit target)
+    // {
+    //     switch (ability.GetType().ToString())
+    //     {
+    //         case "AttackAbility":
+    //             AttackAbility attackAbility = ability as AttackAbility;
+    //             attackAbility.Trigger(this, target, out float rawDamage);
+    //             break;
+    //         case "SupportAbility":
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // }
 
-    public virtual int CalculateDamage(int mult)
+    public virtual int StandardDamageCalculator(int mult, int critMultiplier = 2)
     {
         float damageVariance = Random.Range(0.90f, 1.10f);
-        float damage = mult * damageVariance * ATK.Value;
+        float effectiveAttack = mult * damageVariance * ATK.Value;
         
         // currently no crit stat, so it's based on speed because why not
         float critChance = Random.value;
         float speed = (float)SPD.Value;
         float critThreshold = speed * 0.25f / (10f + speed);
 
+        // Crits deal double damage
         if (critThreshold > critChance)
         {
-            damageVariance *= critThreshold;
+            effectiveAttack *= critMultiplier;
         }
 
-        int rounded = (int)Math.Round(damage, 0);
+        int rounded = (int)Math.Round(effectiveAttack, 0);
         return rounded; 
     }
 
@@ -125,9 +127,9 @@ public abstract class CombatUnit : MonoBehaviour
         currentHealth = math.max(0, currentHealth - damage);
     }
 
-    public virtual void GetHealed(CombatUnit target, int heal)
+    public virtual void RestoreHealth(CombatUnit target, int healing)
     {
-        currentHealth = math.min(MaxHealth, currentHealth + heal);
+        currentHealth = math.min(MaxHealth, currentHealth + healing);
     }
 
     #region Getters/Setters

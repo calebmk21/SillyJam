@@ -4,15 +4,16 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
+
 [CreateAssetMenu(fileName = "AttackAbilityData", menuName = "Scriptable Objects/AttackAbilityData")]
 public class AttackAbilityData : AbilityData
 {
 
-    public delegate float del(CombatUnit user, CombatUnit target);
+    public delegate int del(CombatUnit user, CombatUnit target);
     public del DamageFunc = delegate(CombatUnit user, CombatUnit target)
     {
-        float userAtk = user.GetAttack();
-        float targetDef = target.GetDefense();
+        int userAtk = user.GetAttack();
+        int targetDef = target.GetDefense();
 
         return userAtk * 2 - targetDef;
     };
@@ -29,4 +30,7 @@ public class AttackAbilityData : AbilityData
     {
         return new AttackAbility(this, source, statusEffectDataList);
     }
+
+   
+    
 }
