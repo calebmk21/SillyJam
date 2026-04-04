@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Unity.Multiplayer.PlayMode;
 using UnityEngine.Serialization;
 
 public class CombatManager : MonoBehaviour
@@ -20,6 +21,7 @@ public class CombatManager : MonoBehaviour
 
     [Header("Combatants")]
     // collection of all units in the battle
+    // initialize the encounter by sending a prefab of the encounter container into this instance when starting combat
     [SerializeField] private GameObject PartyContainer;
     [SerializeField] private GameObject EnemyContainer;
     public List<PlayerUnit> Party = new List<PlayerUnit>();
@@ -27,10 +29,11 @@ public class CombatManager : MonoBehaviour
 
 
     [Header("Combat Data")] 
-    // [SerializeField] private BattleUI combatUI;
+    [SerializeField] private CombatUI combatUI;
     private Queue<CombatUnit> TurnOrder = new Queue<CombatUnit>();
     private BattlePhase _currentPhase;
     public CombatUnit _currentUnit;
+    public PlayerUnit _currentPlayer;
     private bool PartyAlive = true, EnemiesAlive = true;
     
     
@@ -53,21 +56,26 @@ public class CombatManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    
+    private void OnEnable()
+    {
+        CombatUI.OnSelectEnemyAttack += ChoseAttack;
+        CombatUI.OnSelectEnemyAbility += ChoseAbility;
+    }
 
     public void Start()
     {
         LoadCombatants();
         GetTurnOrder();
-        StartCoroutine(Combat());
+        StartCoroutine(CombatRound());
     }
-
-
-
+    
+    
     #region Combat
 
     // Main Combat Coroutine -- call after every turn
     // TODO add a StartCoroutine(Combat()); once a combat button is selected in PlayerPhase
-    private IEnumerator Combat()
+    private IEnumerator CombatRound()
     {
         if (_currentPhase != BattlePhase.Won && _currentPhase != BattlePhase.Lost)
         {
@@ -83,8 +91,8 @@ public class CombatManager : MonoBehaviour
             if (_currentUnit.GetType() == typeof(PlayerUnit))
             {
                 _currentPhase = BattlePhase.Player;
-                PlayerUnit playerUnit = _currentUnit as PlayerUnit;
-                yield return StartCoroutine(PlayerPhase(playerUnit));
+                _currentPlayer = _currentUnit as PlayerUnit;
+                yield return StartCoroutine(PlayerPhase(_currentPlayer));
             }
             else if (_currentUnit.GetType() == typeof(EnemyUnit))
             {
@@ -108,6 +116,7 @@ public class CombatManager : MonoBehaviour
         // Give time for the wonky teleport
         yield return new WaitForSeconds(1);
         // display battle ui and give control to player
+        current.ActivateUnitTurn();
         
     }
     
@@ -117,18 +126,9 @@ public class CombatManager : MonoBehaviour
         // Maybe highlight the enemy?
         yield return new WaitForSeconds(1);
     
-        EnemyTurn();
+        //EnemyTurn();
     }
-
-    private void PlayerTurn()
-    {
-        
-    }
-
-    private void EnemyTurn()
-    {
-        
-    }
+    
     
     
     
@@ -141,7 +141,7 @@ public class CombatManager : MonoBehaviour
     {
         _currentUnit = unit;
         _isActiveTurn = true;
-        OnActiveTurnChanged.Invoke(_isActiveTurn);
+        // OnActiveTurnChanged.Invoke(_isActiveTurn);
         //BattleUIHandler.Instance.ToggleActionMenu(true);
     }
 
@@ -155,6 +155,7 @@ public class CombatManager : MonoBehaviour
     {
         _isActiveTurn = false;
         //Micro delay to allow for any remaining animations to finish.
+        StartCoroutine(CombatRound());
     }
     
     public void LoadCombatants()
@@ -176,6 +177,26 @@ public class CombatManager : MonoBehaviour
             player.OnEndTurn += EndTurn;
         }
         
+    }
+    
+    public void ChoseAttack(EnemyUnit enemy)
+    {
+        _currentPlayer.Attack(enemy);
+    }
+
+    public void ChoseAbility(Ability ability)
+    {
+        _currentPlayer.UseAbility(ability);
+    }
+
+    public void ChoseAbility(EnemyUnit enemy, Ability ability)
+    {
+        _currentPlayer.UseAbility(enemy, ability);
+    }
+
+    public CombatUnit GetCurrentCombatant()
+    {
+        return _currentUnit;
     }
     
     public void GetTurnOrder()

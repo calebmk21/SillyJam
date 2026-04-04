@@ -22,6 +22,11 @@ public class PlayerUnit : CombatUnit
     public delegate void EndTurnEventHandler();
     public event EndTurnEventHandler OnEndTurn;
     
+    
+    // Base Attack Values
+    private int baseDamageMultiplier = 1;
+    private int rawDamage;
+    
     // Targeting Events
     
     
@@ -52,10 +57,20 @@ public class PlayerUnit : CombatUnit
 
     public virtual void Attack(EnemyUnit enemy)
     {
-        
+        // OnDisplayAlert("Attack");
+        rawDamage = StandardDamageCalculator(baseDamageMultiplier);
+        enemy.TakeDamage(rawDamage);
+        //audioController.PlayAttackVoice();
+        //animationController.PlayAttack();
+        // OnTargetOther?.Invoke(this, enemy);
     }
 
     public virtual void UseAbility(Ability ability)
+    {
+        
+    }
+    
+    public virtual void UseAbility(EnemyUnit enemy, Ability ability)
     {
         
     }
@@ -71,9 +86,15 @@ public class PlayerUnit : CombatUnit
     protected override void EndTurn()
     {
         DecrementStatusEffects();
-        //StartCoroutine(MoveRight());
+        StartCoroutine(MoveLeft());
         OnEndTurn?.Invoke();
-    }    
+    }
+    
+    // public method for the Combat Manager to initialize this unit's turn from the queue
+    public void ActivateUnitTurn()
+    {
+        StartTurn();
+    }
     
     private IEnumerator MoveRight()
     {

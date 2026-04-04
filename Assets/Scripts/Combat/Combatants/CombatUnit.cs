@@ -27,7 +27,8 @@ public abstract class CombatUnit : MonoBehaviour
     [SerializeField] protected CharacterStat SPD;
     public readonly List<CharacterStat> Stats;
 
-    public float CurrentHealth { get { return currentHealth; } }
+    public string Name { get { return charName; } }
+    public int CurrentHealth { get { return currentHealth; } }
     public int MaxHealth { get { return HP.Value; } }
 
     // [Header("Equipment Info")] 
@@ -43,6 +44,9 @@ public abstract class CombatUnit : MonoBehaviour
     // Methods for turn logic
     protected abstract void StartTurn();
     protected abstract void EndTurn();
+
+    public delegate void SetTurnActive();
+    public SetTurnActive SetTurn;
     
     
     public CombatUnit()
@@ -122,7 +126,7 @@ public abstract class CombatUnit : MonoBehaviour
         return rounded; 
     }
 
-    public virtual void TakeDamage(CombatUnit target, int damage)
+    public virtual void TakeDamage(int damage)
     {
         currentHealth = math.max(0, currentHealth - damage);
     }
